@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper2">
+	<!-- namespace+id(全局唯一不允许重复)	userMapper.getByUsersAll-->
+	<select id="getByUsers" resultType="com.jaying.entity.UserEntity">
+		select * from jaying_users where id = 1
+	</select>
+</mapper>

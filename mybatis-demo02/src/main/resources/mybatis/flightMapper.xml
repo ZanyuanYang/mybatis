@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaying.mapper.FlightMapper">
+	<resultMap id="flightEntityMap" type="com.jaying.entity.FlightEntity">
+		<!--	数据库字段名称column	-->
+		<id column="id" property="id"/>
+		<result column="flight_id" property="flightId"/>
+		<result column="company" property="company"/>
+		<result column="departure_airport" property="departureAirport"/>
+		<result column="arrive_airport" property="arriveAirport"/>
+		<result column="departure_time" property="departureTime"/>
+		<result column="arrive_time" property="arriveTime"/>
+		<result column="model" property="model"/>
+		<result column="is_delete" property="isDelete"/>
+	</resultMap>
+	<!-- namespace+id(全局唯一不允许重复)	userMapper.getByUsersAll-->
+	<select id="getByFlightAll" resultMap="flightEntityMap">
+		select * from mayikt_flight;
+	</select>
+
+	<!--parameterType int string Double 有处理防止sql语句攻击功能	-->
+	<select id="getByIdFlight" parameterType="int" resultMap="flightEntityMap">
+		select * from mayikt_flight where id = #{id};
+	</select>
+
+	<insert id="insertFlight" parameterType="com.jaying.entity.FlightEntity">
+		insert into mayikt_flight (id, flight_id, company, departure_airport, arrive_airport, departure_time, arrive_time, model, is_delete)
+		values (null, #{flightId}, #{company}, #{departureAirport}, #{arriveAirport}, #{departureTime}, #{arriveTime}, #{model}, #{isDelete});
+	</insert>
+
+	<delete id="deleteByIdFlight" parameterType="int">
+		delete from mayikt_flight where id = #{id}
+	</delete>
+
+	<update id="updateFlight" parameterType="com.jaying.entity.FlightEntity">
+		update mayikt_flight
+		set `flight_id`=#{flightId}, `company`=#{company}, `departure_airport`=#{departureAirport},
+		    `arrive_airport`=#{arriveAirport}, `departure_time`=#{departureTime}, `arrive_time`=#{arriveTime},
+		    `model`=#{model}, `is_delete`=#{isDelete}
+		where (`id`=#{id});
+	</update>
+
+	<!-- 方法一	-->
+	<select id="getByIdFlightParameterMap" resultMap="flightEntityMap">
+		select * from mayikt_flight where company=#{company} and departure_airport=#{departureAirport} and arrive_airport=#{arriveAirport};
+	</select>
+
+	<!-- 方法二	-->
+	<select id="getByIdFlightParameter" resultMap="flightEntityMap">
+		select * from mayikt_flight where company=#{company} and departure_airport=#{departureAirport} and arrive_airport=#{arriveAirport};
+	</select>
+
+	<!-- 方法三	-->
+<!--	<select id="getByIdFlightPoJo" parameterType="com.jaying.entity.FlightEntity" resultMap="flightEntityMap">-->
+<!--		select * from mayikt_flight where-->
+<!--		    1=1-->
+<!--			<if test="company!=null and company != '' ">-->
+<!--				and company=#{company}-->
+<!--			</if>-->
+<!--			<if test="departureAirport!=null and departureAirport != '' ">-->
+<!--				and departure_airport=#{departureAirport}-->
+<!--			</if>-->
+<!--			<if test="arriveAirport!=null and arriveAirport != '' ">-->
+<!--				and arrive_airport=#{arriveAirport};-->
+<!--			</if>-->
+<!--	</select>-->
+
+	<select id="getByIdFlightPoJo" parameterType="com.jaying.entity.FlightEntity" resultMap="flightEntityMap">
+		select * from mayikt_flight
+		<where>
+			<if test="company!=null and company != '' ">
+				and company=#{company}
+			</if>
+			<if test="departureAirport!=null and departureAirport != '' ">
+				and departure_airport=#{departureAirport}
+			</if>
+			<if test="arriveAirport!=null and arriveAirport != '' ">
+				and arrive_airport=#{arriveAirport};
+			</if>
+		</where>
+
+	</select>
+
+
+</mapper>
